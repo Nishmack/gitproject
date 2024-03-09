@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="margin: 0">
+    <form onsubmit="handleFormSubmit(event)">
+      <label for="amount">Choose expenseamount:</label>
+      <input type="number" name="amount" id="amount" />
+      <label for="description">Choose description:</label>
+      <input type="text" name="description" id="description" />
+      <label for="movie">Choose a category</label>
+      <select name="movie" id="movie">
+        <option value="seven">Seven</option>
+        <option value="zodiac">Zodiac</option>
+        <option value="avengers">Avengers</option>
+        <option value="shutterisland">Shutter island</option>
+      </select>
+      <button type="submit">Add Expense</button>
+    </form>
+    <ul id="userdetails"></ul>
+
+
+    <script>
+         function handleFormSubmit(event){
+                event.preventDefault();
+                const amount = event.target.amount.value;
+                const description = event.target.description.value;
+                const movie = event.target.movie.value;
+                const obj = {
+                    amount,
+                    description,
+                    movie
+                }
+                localStorage.setItem(obj.movie, JSON.stringify(obj))
+                showUserOnScreen(obj)
+            }
+            function showUserOnScreen(obj){
+                const parentElement = document.getElementById('userdetails')
+                parentElement.innerHTML += `<li>${obj.amount} - ${obj.description} - ${obj.movie} <button onclick="removeUser(event, '${obj.movie}')">Delete Expense</button> <button onclick="editUser('${obj.movie}')">Edit Expense</button> </li>`;
+
+            }
+            // Function to remove user details from screen and local storage
+            function removeUser(event, movie) {
+                event.preventDefault();
+                const parentElement = event.target.parentNode;
+                parentElement.remove(); // Remove from screen
+                // Remove from local storage
+                localStorage.removeItem(movie);
+    }
+            // Function to edit user details
+            function editUser(movie) {
+                // Retrieve user details from local storage
+                const userData = JSON.parse(localStorage.getItem(movie));
+                // Populate form fields with existing values
+                document.getElementById('amount').value = userData.amount;
+                document.getElementById('description').value = userData.description;
+                document.getElementById('movie').value = userData.movie;
+                // Remove user details from screen and local storage
+                removeUser(event, movie);
+            }
+
+       
+            
+
+    </script>
+  </body>
+  
+</html>

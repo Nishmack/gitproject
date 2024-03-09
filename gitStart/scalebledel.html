@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="margin: 0">
+    <form onsubmit="handleFormSubmit(event)">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" />
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" />
+      <label for="phone">Phone No</label>
+      <input type="tel" name="phone" id="phone" />
+      <button type="submit">Submit</button>
+    </form>
+    <ul id="userdetails"></ul>
+
+
+    <script>
+         function handleFormSubmit(event){
+                event.preventDefault();
+                const name = event.target.username.value;
+                const email = event.target.email.value;
+                const phone = event.target.phone.value;
+                const obj = {
+                    name,
+                    email,
+                    phone
+                }
+                localStorage.setItem(obj.email, JSON.stringify(obj))
+                showUserOnScreen(obj)
+            }
+            function showUserOnScreen(obj){
+                const parentElement = document.getElementById('userdetails')
+                parentElement.innerHTML += `<li>${obj.name} - ${obj.email} - ${obj.phone} <button onclick="editUser('${obj.email}')">Edit</button>  <button onclick="removeUser(event, '${obj.email}')">Delete</button></li>`;
+
+            }
+            // Function to remove user details from screen and local storage
+            function removeUser(event, email) {
+                event.preventDefault();
+                const parentElement = event.target.parentNode;
+                parentElement.remove(); // Remove from screen
+                // Remove from local storage
+                localStorage.removeItem(email);
+    }
+            // Function to edit user details
+            function editUser(email) {
+                // Retrieve user details from local storage
+                const userData = JSON.parse(localStorage.getItem(email));
+                // Populate form fields with existing values
+                document.getElementById('username').value = userData.name;
+                document.getElementById('email').value = userData.email;
+                document.getElementById('phone').value = userData.phone;
+                // Remove user details from screen and local storage
+                removeUser(event, email);
+            }
+
+       
+            
+
+    </script>
+  </body>
+  
+</html>
