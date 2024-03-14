@@ -1,4 +1,5 @@
-function handleFormSubmit(event) {
+ 
+ function handleFormSubmit(event) {
   event.preventDefault();
 
   const userDetails = {
@@ -8,7 +9,7 @@ function handleFormSubmit(event) {
 
   // Save data on server
   axios.post(
-      "https://crudcrud.com/api/56990b05d99f4b3ba74c045910342d1d/appointmentData",
+      "https://crudcrud.com/api/bf68443395db42719c2e189ffc002dd1/appointmentData",
       userDetails
   )
   .then(response => {
@@ -36,7 +37,7 @@ function displayProductOnScreen(productDetails) {
   // Delete data from server and screen
   deleteBtn.addEventListener("click", () => {
       const productId = productDetails._id; // Assuming id is present in product details
-      axios.delete(`https://crudcrud.com/api/56990b05d99f4b3ba74c045910342d1d/appointmentData/${productId}`)
+      axios.delete(`https://crudcrud.com/api/bf68443395db42719c2e189ffc002dd1/appointmentData/${productId}`)
           .then(() => {
               productList.removeChild(productItem);
               updateTotalValue(-productDetails.price); // Update total value after deletion
@@ -45,21 +46,21 @@ function displayProductOnScreen(productDetails) {
               console.error(error);
           });
   });
+ 
+updateTotalValue(parseFloat(productDetails.price));
 
-  // Update total value
-  updateTotalValue(productDetails.price);
 }
+ 
 
 function updateTotalValue(price) {
-
     // Get the <h4> element where total value will be displayed
     const totalValueElement = document.querySelector('h4');
     
-    // Get the current total value from the element's text content
+    // Get the current total value from the element's inner HTML
     let currentValueText = totalValueElement.textContent.split(':')[1].trim();
     
     // Parse the current value as a float, if possible
-    let currentValue = parseFloat(currentValueText);
+    let currentValue = parseFloat(currentValueText.replace('Rs ', ''));
     
     // Check if currentValue is a valid number, if not, set it to 0
     if (isNaN(currentValue)) {
@@ -69,15 +70,12 @@ function updateTotalValue(price) {
     // Add the new price to the current total value
     currentValue += price;
     
-    // Update the text content of the <h4> element with the new total value
+    // Update the inner HTML of the <h4> element with the new total value
     totalValueElement.textContent = `Total Value Worth of Product: Rs ${currentValue}`;
-  }
-  
- 
-
+}
 
 window.addEventListener("DOMContentLoaded", () => {
-  axios.get("https://crudcrud.com/api/56990b05d99f4b3ba74c045910342d1d/appointmentData")
+  axios.get("https://crudcrud.com/api/bf68443395db42719c2e189ffc002dd1/appointmentData")
       .then(response => {
           console.log(response);
           for (const product of response.data) {
